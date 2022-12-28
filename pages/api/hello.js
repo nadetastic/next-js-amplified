@@ -8,9 +8,6 @@ import aws_exports from '../../src/aws-exports';
 
 Amplify.configure({
   ...aws_exports,
-  // oauth: {
-  //     ...oauth,
-  // },
   ssr: true,
 });
 
@@ -20,11 +17,9 @@ export default async function handler(req, res) {
     try {
         const user = await Auth.currentAuthenticatedUser();
         console.log("GOT", user);
-        res.status(200).json({ response: JSON.stringify(user) })
+        res.status(200).json({ response: JSON.stringify(user), cookies: JSON.stringify(req.cookies) })
     } catch (e) {
         console.log("ERERER", e);
-        res.status(500).json( { response: JSON.stringify(e) })
+        res.status(500).json( { response: JSON.stringify(e), cookies: JSON.stringify(req.cookies) })
     }
-
-  // res.status(200).json({ name: 'John Doe' })
 }

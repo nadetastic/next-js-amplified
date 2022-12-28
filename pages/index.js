@@ -1,8 +1,29 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import { Auth } from 'aws-amplify';
 
 export default function Home() {
+
+  const signIn = async () => {
+    try {
+      const user = await Auth.federatedSignIn({ provider: 'Google' });
+    }
+    catch (e) {
+      console.log("ERROR", e);
+    }
+  }
+
+  const currentUser = async () => {
+    try {
+      const user = await Auth.currentAuthenticatedUser();
+      console.log("USER", user);
+    }
+    catch (e) {
+      console.log("ERROR", e);
+    }
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -22,10 +43,11 @@ export default function Home() {
         </p>
 
         <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+          <div className={styles.card}>
+            <button onClick={signIn}>Sign In</button>
+            <button onClick={currentUser}>Current User</button>
+            <button onClick={() => Auth.signOut()}>Sign Out</button>
+          </div>
 
           <a href="https://nextjs.org/learn" className={styles.card}>
             <h2>Learn &rarr;</h2>
