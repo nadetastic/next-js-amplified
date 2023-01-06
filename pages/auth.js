@@ -4,9 +4,29 @@ import styles from '../styles/Home.module.css'
 
 import { withSSRContext, Auth } from 'aws-amplify'
 import { Authenticator } from '@aws-amplify/ui-react'
-import '@aws-amplify/ui-react/styles.css'
 
-export default function Home({creds, ssruser, error}) {
+export default function Home({creds, user, error}) {
+
+  const google = async () => {
+    try {
+      const { user } = await Auth.federatedSignIn({ provider: 'Google' });
+      console.log(user);
+    } catch(e){
+      console.log(e);
+    }
+  }
+  const signIn = async () => {
+    try {
+        const { user } = await Auth.signIn('dkkiuna11@gmail.com', 'abcd1234');
+        console.log(user);
+    } catch (error) {
+        console.log('error signing in', error);
+    }
+}
+
+  const signOut = async () => {
+    await Auth.signOut()
+  }
 
   return (
     <div className={styles.container}>
@@ -18,33 +38,29 @@ export default function Home({creds, ssruser, error}) {
 
       <main className={styles.main}>
             <h1 className={styles.title}>Welcome to <a href="https://nextjs.org">Next.js!</a></h1>
-            <h3>Using Authenticator</h3>
-        <Authenticator>
-        {({signOut, user}) => (
-            <div>
-              <p>{user.username}</p>
-              <div className={styles.grid}>
-                  <div className={styles.card}>
-                      <h2>Error</h2>
-                      <p>{error}</p>
-                  </div>
-                  <div className={styles.card}>
-                      <h2>Creds</h2>
-                      <p>{creds}</p>
-                  </div>
-                  <div className={styles.card}>
-                      <h2>User</h2>
-                      <p>{ssruser}</p>
-                  </div>
-              </div>
-              <div className={styles.grid}>
-                  <div className={styles.card}>
-                      <button onClick={signOut}>Sign Out</button>
-                  </div>
-              </div>
+            <h3>Using <code>Amplify.Auth</code></h3>
+            <div className={styles.grid}>
+                <div className={styles.card}>
+                    <h2>Error</h2>
+                    <p>{error}</p>
+                </div>
+                <div className={styles.card}>
+                    <h2>Creds</h2>
+                    <p>{creds}</p>
+                </div>
+                <div className={styles.card}>
+                    <h2>User</h2>
+                    <p>{user}</p>
+                </div>
             </div>
-        )}
-        </Authenticator>
+            <div className={styles.grid}>
+                <div className={styles.card}>
+                    <button onClick={google}>Google</button><br />
+                    <button onClick={signIn}>Sign In</button><br />
+                    <button onClick={signOut}>Sign Out</button>
+                </div>
+            </div>
+
       </main>
 
       <footer className={styles.footer}>
@@ -68,7 +84,7 @@ export async function getServerSideProps({ req }) {
     return {
         props: {
           creds: JSON.stringify(creds),
-          ssruser: JSON.stringify(user),
+          user: JSON.stringify(user),
           error: false
         }
       }
@@ -77,7 +93,7 @@ export async function getServerSideProps({ req }) {
         props: {
           error: JSON.stringify(e),
           creds: 'No creds',
-          ssruser: 'No user'
+          user: 'No user'
         }
       }
   }
