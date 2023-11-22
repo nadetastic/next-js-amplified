@@ -18,7 +18,7 @@ Amplify.configure({
         ...existingConfig.Auth?.Cognito.loginWith,
         oauth: {
           ...existingConfig.Auth?.Cognito.loginWith?.oauth,
-          redirectSignIn: ["http://localhost:3000/"],
+          redirectSignIn: ["http://localhost:3000/dash"],
           redirectSignOut: ["http://localhost:3000/"],
         },
       },
