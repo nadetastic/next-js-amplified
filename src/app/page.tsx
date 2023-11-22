@@ -1,7 +1,29 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
+
+import Image from "next/image";
+import styles from "./page.module.css";
+
+import { getCurrentUser, signInWithRedirect, signOut } from "aws-amplify/auth";
 
 export default function Home() {
+  const handleSIWR = async () => {
+    try {
+      const res = await signInWithRedirect({
+        provider: "Google",
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleGetUser = async () => {
+    try {
+      const res = await getCurrentUser();
+      console.log(res);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
     <main className={styles.main}>
       <div className={styles.description}>
@@ -15,7 +37,7 @@ export default function Home() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            By{' '}
+            By{" "}
             <Image
               src="/vercel.svg"
               alt="Vercel Logo"
@@ -25,6 +47,11 @@ export default function Home() {
               priority
             />
           </a>
+          <br />
+          <button onClick={handleSIWR}>Google</button>
+          <br />
+          <button onClick={handleGetUser}>GetUser</button>
+          <button onClick={async () => await signOut()}>Sign Out</button>
         </div>
       </div>
 
@@ -91,5 +118,5 @@ export default function Home() {
         </a>
       </div>
     </main>
-  )
+  );
 }
