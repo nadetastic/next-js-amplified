@@ -6,7 +6,15 @@ const ServerPage = async () => {
   try {
     const currentInfo = await runWithAmplifyServerContext({
       nextServerContext: { cookies },
-      operation: (contextSpec) => fetchAuthSession(contextSpec),
+      operation: async (contextSpec) => {
+        try {
+          const session = await fetchAuthSession(contextSpec, {});
+          const user = await getCurrentUser(contextSpec);
+          return { SESS: session, USER: user };
+        } catch (e) {
+          return "NO Session" + e;
+        }
+      },
     });
 
     return JSON.stringify(currentInfo);
