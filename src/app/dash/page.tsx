@@ -13,6 +13,15 @@ export default function Home() {
       console.log(e);
     }
   };
+
+  const test = async () => {
+    try {
+      await signInWithRedirect();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <main className={styles.main}>
       <div className={styles.description}>
